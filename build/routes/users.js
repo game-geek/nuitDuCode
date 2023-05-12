@@ -79,7 +79,6 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
             case 0: return [4 /*yield*/, (0, db_1.getUsers)()];
             case 1:
                 data = _a.sent();
-                console.log("data", data);
                 if (data) {
                     res.send({ scores: data });
                 }
@@ -157,4 +156,19 @@ function logger(req, res, next) {
     console.log(req.originalUrl);
     next();
 }
+router.get("/new", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var data;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, db_1.getUsers)()];
+            case 1:
+                data = _a.sent();
+                if (!data) {
+                    data = [];
+                }
+                res.render("users/display", { data: data });
+                return [2 /*return*/];
+        }
+    });
+}); });
 exports.default = router;

@@ -41,7 +41,6 @@ const scores = {};
 
 router.get("/", async (req, res) => {
   const data = await getUsers();
-  console.log("data", data);
   if (data) {
     res.send({ scores: data });
   } else {
@@ -101,5 +100,13 @@ function logger(req, res, next) {
   console.log(req.originalUrl);
   next();
 }
+
+router.get("/new", async (req, res) => {
+  let data = await getUsers();
+  if (!data) {
+    data = [];
+  }
+  res.render("users/display", { data });
+});
 
 export default router;

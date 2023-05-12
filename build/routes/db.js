@@ -97,7 +97,6 @@ function getUsers() {
                     return [4 /*yield*/, pool.query("SELECT username, score FROM users ORDER BY score DESC LIMIT 5")];
                 case 1:
                     query = _a.sent();
-                    console.log(query.rows);
                     return [2 /*return*/, query.rows];
                 case 2:
                     err_2 = _a.sent();

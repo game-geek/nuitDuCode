@@ -55,7 +55,6 @@ export async function getUsers() {
     const query = await pool.query(
       "SELECT username, score FROM users ORDER BY score DESC LIMIT 5"
     );
-    console.log(query.rows);
     return query.rows;
   } catch (err) {
     console.log("error", err);
