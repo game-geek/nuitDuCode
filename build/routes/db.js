@@ -40,7 +40,7 @@ exports.updateUser = exports.getUsers = exports.addUser = void 0;
 var pg_1 = require("pg");
 var pool = new pg_1.Pool({
     user: "test_db_84k6_user",
-    host: "dpg-chf2f1orddl9bugfeo3g-a.frankfurt-postgres.render.com",
+    host: "dpg-chf2f1orddl9bugfeo3g-a",
     database: "test_db_84k6",
     password: "EqZmXAreMfs7IvLhhMK9t49rJzGGxtQD",
     port: 5432,

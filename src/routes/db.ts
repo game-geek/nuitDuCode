@@ -2,7 +2,7 @@ import { Pool } from "pg";
 
 const pool = new Pool({
   user: "test_db_84k6_user",
-  host: "dpg-chf2f1orddl9bugfeo3g-a.frankfurt-postgres.render.com",
+  host: "dpg-chf2f1orddl9bugfeo3g-a",
   database: "test_db_84k6",
   password: "EqZmXAreMfs7IvLhhMK9t49rJzGGxtQD",
   port: 5432,

@@ -1,15 +1,20 @@
 import requests
 
+
+HOST = "https://nuit-du-code.onrender.com"
+
 payload = dict(username=input("username -> "))
 
-r = requests.post('http://localhost:3000/users/username', data=payload)
+
+
+r = requests.post(HOST+'/users/username', data=payload)
 print(r.content)
-r = requests.get('http://localhost:3000/users')
+r = requests.get(HOST + '/users')
 print(r.content)
 
 payload = dict(username=input("username -> "), password=input("password -> "), score=int(input("score -> ")))
 # error prob with integers
-r = requests.post('http://localhost:3000/users/update', data=payload)
+r = requests.post(HOST+'/users/update', data=payload)
 print(r.content)
-r = requests.get('http://localhost:3000/users')
+r = requests.get(HOST+'/users')
 print(r.content)
