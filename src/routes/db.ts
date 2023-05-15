@@ -1,14 +1,28 @@
 import { Pool } from "pg";
 require('dotenv').config();
 
-const pool = new Pool({
-  user: process.env.USER,
-  host: process.env.HOST,
-  database: process.env.DATABASE,
-  password: process.env.PASSWORD,
-  port: 5432,
-  ssl: {},
-});
+const pool = undefined
+
+if (process.env.SSL) {
+	pool = new Pool({
+	  user: process.env.USER,
+	  host: process.env.HOST,
+	  database: process.env.DATABASE,
+	  password: process.env.PASSWORD,
+	  port: 5432,
+	  ssl: {},
+	});
+} else {
+	pool = new Pool({
+	  user: process.env.USER,
+	  host: process.env.HOST,
+	  database: process.env.DATABASE,
+	  password: process.env.PASSWORD,
+	  port: 5432
+	});
+}
+
+
 console.log("pool", pool);
 const usernameRegex = /^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$/;
 
