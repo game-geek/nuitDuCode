@@ -1,10 +1,11 @@
 import { Pool } from "pg";
+require('dotenv').config();
 
 const pool = new Pool({
-  user: "test_db_84k6_user",
-  host: "dpg-chf2f1orddl9bugfeo3g-a",
-  database: "test_db_84k6",
-  password: "EqZmXAreMfs7IvLhhMK9t49rJzGGxtQD",
+  user: process.env.USER,
+  host: process.env.HOST,
+  database: process.env.DATABASE,
+  password: process.env.PASSWORD,
   port: 5432,
   ssl: {},
 });

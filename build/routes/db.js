@@ -38,11 +38,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUser = exports.getUsers = exports.addUser = void 0;
 var pg_1 = require("pg");
+require('dotenv').config();
 var pool = new pg_1.Pool({
-    user: "test_db_84k6_user",
-    host: "dpg-chf2f1orddl9bugfeo3g-a",
-    database: "test_db_84k6",
-    password: "EqZmXAreMfs7IvLhhMK9t49rJzGGxtQD",
+    user: process.env.USER,
+    host: process.env.HOST,
+    database: process.env.DATABASE,
+    password: process.env.PASSWORD,
     port: 5432,
     ssl: {},
 });
