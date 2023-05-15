@@ -39,14 +39,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUser = exports.getUsers = exports.addUser = void 0;
 var pg_1 = require("pg");
 require('dotenv').config();
-var pool = new pg_1.Pool({
-    user: process.env.USER,
-    host: process.env.HOST,
-    database: process.env.DATABASE,
-    password: process.env.PASSWORD,
-    port: 5432,
-    ssl: {},
-});
+var pool = undefined;
+if (Boolean(process.env.SSL)) {
+    pool = new pg_1.Pool({
+        user: process.env.USER,
+        host: process.env.HOST,
+        database: process.env.DATABASE,
+        password: process.env.PASSWORD,
+        port: 5432,
+        ssl: {},
+    });
+}
+else {
+    pool = new pg_1.Pool({
+        user: process.env.USER,
+        host: process.env.HOST,
+        database: process.env.DATABASE,
+        password: process.env.PASSWORD,
+        port: 5432
+    });
+}
 console.log("pool", pool);
 var usernameRegex = /^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$/;
 function addUser(username, password, score) {

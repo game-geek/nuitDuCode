@@ -1,9 +1,9 @@
 import { Pool } from "pg";
 require('dotenv').config();
 
-const pool = undefined
+let pool = undefined
 
-if (process.env.SSL) {
+if (Boolean(process.env.SSL)) {
 	pool = new Pool({
 	  user: process.env.USER,
 	  host: process.env.HOST,
