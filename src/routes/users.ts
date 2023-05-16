@@ -76,7 +76,7 @@ router.post("/account", async (req, res) => {
   ) {
     const data = await checkAccount(username, password);
     if (data) {
-      res.send({ valid: true, score: data });
+      res.send({ valid: true, ...data });
       return;
     }
   }
