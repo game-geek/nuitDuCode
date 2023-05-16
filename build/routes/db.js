@@ -136,7 +136,7 @@ function checkAccount(username, password) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, pool.query("SELECT users WHERE username = $1 AND password = $2 RETURNING score", [_username, _password])];
+                    return [4 /*yield*/, pool.query("SELECT score FROM users WHERE username =  $1 AND password = $2;", [_username, _password])];
                 case 2:
                     query = _a.sent();
                     if (query.rows.length) {

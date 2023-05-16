@@ -83,7 +83,7 @@ export async function checkAccount(username: string, password: string) {
   const _password = String(password);
   try {
     const query = await pool.query(
-      "SELECT users WHERE username = $1 AND password = $2 RETURNING score",
+      "SELECT score FROM users WHERE username =  $1 AND password = $2;",
       [_username, _password]
     );
     if (query.rows.length) {
