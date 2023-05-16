@@ -1,7 +1,7 @@
 import requests
 
 
-HOST = "https://nuit-du-code.onrender.com"
+HOST = "https://nuit-du-code-api.onrender.com"
 
 payload = dict(username=input("username -> "))
 

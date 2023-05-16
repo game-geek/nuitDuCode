@@ -36,9 +36,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.getUsers = exports.addUser = void 0;
+exports.updateUser = exports.checkAccount = exports.getUsers = exports.addUser = void 0;
 var pg_1 = require("pg");
-require('dotenv').config();
+require("dotenv").config();
 var pool = undefined;
 if (Boolean(process.env.SSL)) {
     pool = new pg_1.Pool({
@@ -56,7 +56,7 @@ else {
         host: process.env.HOST,
         database: process.env.DATABASE,
         password: process.env.PASSWORD,
-        port: 5432
+        port: 5432,
     });
 }
 console.log("pool", pool);
@@ -121,9 +121,44 @@ function getUsers() {
     });
 }
 exports.getUsers = getUsers;
+function checkAccount(username, password) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _username, _password, query, err_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (typeof username != typeof String(""))
+                        return [2 /*return*/, false];
+                    if (typeof password != typeof String(""))
+                        return [2 /*return*/, false];
+                    _username = String(username);
+                    _password = String(password);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, pool.query("SELECT users WHERE username = $1 AND password = $2 RETURNING score", [_username, _password])];
+                case 2:
+                    query = _a.sent();
+                    if (query.rows.length) {
+                        return [2 /*return*/, query.rows[0]];
+                    }
+                    else {
+                        return [2 /*return*/, false];
+                    }
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_3 = _a.sent();
+                    console.log("error", err_3);
+                    return [2 /*return*/, false];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.checkAccount = checkAccount;
 function updateUser(username, password, score) {
     return __awaiter(this, void 0, void 0, function () {
-        var _username, _password, _score, query, err_3;
+        var _username, _password, _score, query, err_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -150,8 +185,8 @@ function updateUser(username, password, score) {
                     }
                     return [3 /*break*/, 4];
                 case 3:
-                    err_3 = _a.sent();
-                    console.log("error", err_3);
+                    err_4 = _a.sent();
+                    console.log("error", err_4);
                     return [2 /*return*/, false];
                 case 4: return [2 /*return*/];
             }

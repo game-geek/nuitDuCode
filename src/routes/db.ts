@@ -1,27 +1,26 @@
 import { Pool } from "pg";
-require('dotenv').config();
+require("dotenv").config();
 
-let pool = undefined
+let pool = undefined;
 
 if (Boolean(process.env.SSL)) {
-	pool = new Pool({
-	  user: process.env.USER,
-	  host: process.env.HOST,
-	  database: process.env.DATABASE,
-	  password: process.env.PASSWORD,
-	  port: 5432,
-	  ssl: {},
-	});
+  pool = new Pool({
+    user: process.env.USER,
+    host: process.env.HOST,
+    database: process.env.DATABASE,
+    password: process.env.PASSWORD,
+    port: 5432,
+    ssl: {},
+  });
 } else {
-	pool = new Pool({
-	  user: process.env.USER,
-	  host: process.env.HOST,
-	  database: process.env.DATABASE,
-	  password: process.env.PASSWORD,
-	  port: 5432
-	});
+  pool = new Pool({
+    user: process.env.USER,
+    host: process.env.HOST,
+    database: process.env.DATABASE,
+    password: process.env.PASSWORD,
+    port: 5432,
+  });
 }
-
 
 console.log("pool", pool);
 const usernameRegex = /^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$/;
@@ -71,6 +70,27 @@ export async function getUsers() {
       "SELECT username, score FROM users ORDER BY score DESC LIMIT 5"
     );
     return query.rows;
+  } catch (err) {
+    console.log("error", err);
+    return false;
+  }
+}
+
+export async function checkAccount(username: string, password: string) {
+  if (typeof username != typeof String("")) return false;
+  if (typeof password != typeof String("")) return false;
+  const _username = String(username);
+  const _password = String(password);
+  try {
+    const query = await pool.query(
+      "SELECT users WHERE username = $1 AND password = $2 RETURNING score",
+      [_username, _password]
+    );
+    if (query.rows.length) {
+      return query.rows[0];
+    } else {
+      return false;
+    }
   } catch (err) {
     console.log("error", err);
     return false;

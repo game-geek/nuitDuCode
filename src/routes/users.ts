@@ -1,6 +1,6 @@
 import express = require("express");
 import { v4 as uuidv4 } from "uuid";
-import { addUser, getUsers, updateUser } from "./db";
+import { addUser, getUsers, updateUser, checkAccount } from "./db";
 
 const router = express.Router();
 router.use(logger);
@@ -51,7 +51,7 @@ router.get("/", async (req, res) => {
 router.post("/username", async (req, res) => {
   const username = req.body.username;
   console.log("username", username);
-  const password = uuidv4();
+  const password = uuidv4().slice(0, 6);
 
   const successful = await addUser(username, password, 0);
   if (successful) {
@@ -65,6 +65,23 @@ router.post("/username", async (req, res) => {
 });
 router.get("/test", async (req, res) => {
   res.send("ok");
+});
+
+router.post("/account", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  if (
+    typeof username == typeof String() &&
+    typeof password == typeof String()
+  ) {
+    const data = await checkAccount(username, password);
+    if (data) {
+      res.send({ valid: true, score: data });
+      return;
+    }
+  }
+  res.send({ valid: false, username });
+  return;
 });
 
 router.post("/update", async (req, res) => {

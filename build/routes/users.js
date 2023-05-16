@@ -96,7 +96,7 @@ router.post("/username", function (req, res) { return __awaiter(void 0, void 0, 
             case 0:
                 username = req.body.username;
                 console.log("username", username);
-                password = (0, uuid_1.v4)();
+                password = (0, uuid_1.v4)().slice(0, 6);
                 return [4 /*yield*/, (0, db_1.addUser)(username, password, 0)];
             case 1:
                 successful = _a.sent();
@@ -117,6 +117,29 @@ router.get("/test", function (req, res) { return __awaiter(void 0, void 0, void 
     return __generator(this, function (_a) {
         res.send("ok");
         return [2 /*return*/];
+    });
+}); });
+router.post("/account", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var username, password, data;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                username = req.body.username;
+                password = req.body.password;
+                if (!(typeof username == typeof String() &&
+                    typeof password == typeof String())) return [3 /*break*/, 2];
+                return [4 /*yield*/, (0, db_1.checkAccount)(username, password)];
+            case 1:
+                data = _a.sent();
+                if (data) {
+                    res.send({ valid: true, score: data });
+                    return [2 /*return*/];
+                }
+                _a.label = 2;
+            case 2:
+                res.send({ valid: false, username: username });
+                return [2 /*return*/];
+        }
     });
 }); });
 router.post("/update", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
