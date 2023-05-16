@@ -169,7 +169,7 @@ router.post("/update", function (req, res) { return __awaiter(void 0, void 0, vo
             case 1:
                 data = _a.sent();
                 if (data) {
-                    res.send({ valid: true, score: data });
+                    res.send(__assign({ valid: true }, data));
                     return [2 /*return*/];
                 }
                 _a.label = 2;

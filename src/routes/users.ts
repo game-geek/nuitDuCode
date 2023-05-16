@@ -96,7 +96,7 @@ router.post("/update", async (req, res) => {
   ) {
     const data = await updateUser(username, password, score);
     if (data) {
-      res.send({ valid: true, score: data });
+      res.send({ valid: true, ...data });
       return;
     }
   }
