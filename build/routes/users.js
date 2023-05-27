@@ -94,7 +94,7 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                     res.send({ scores: data });
                 }
                 else {
-                    res.send("error");
+                    res.send({ scores: [] });
                 }
                 return [2 /*return*/];
         }
@@ -106,6 +106,34 @@ router.post("/username", function (req, res) { return __awaiter(void 0, void 0, 
         switch (_a.label) {
             case 0:
                 username = req.body.username;
+                console.log("username", username);
+                password = (0, uuid_1.v4)().slice(0, 6);
+                return [4 /*yield*/, (0, db_1.addUser)(username, password, 0)];
+            case 1:
+                successful = _a.sent();
+                if (successful) {
+                    console.log("new user created", { valid: true, password: password });
+                    res.send({ valid: true, password: password });
+                    return [2 /*return*/];
+                }
+                else {
+                    res.send({ valid: false, username: username });
+                    return [2 /*return*/];
+                }
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.get("/username", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var username, password, successful;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                username = req.query.username;
+                if (typeof username != typeof String()) {
+                    res.send({ valid: false, username: username });
+                    return [2 /*return*/];
+                }
                 console.log("username", username);
                 password = (0, uuid_1.v4)().slice(0, 6);
                 return [4 /*yield*/, (0, db_1.addUser)(username, password, 0)];
@@ -153,6 +181,29 @@ router.post("/account", function (req, res) { return __awaiter(void 0, void 0, v
         }
     });
 }); });
+router.get("/account", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var username, password, data;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                username = req.query.username;
+                password = req.query.password;
+                if (!(typeof username == typeof String() &&
+                    typeof password == typeof String())) return [3 /*break*/, 2];
+                return [4 /*yield*/, (0, db_1.checkAccount)(username, password)];
+            case 1:
+                data = _a.sent();
+                if (data) {
+                    res.send(__assign({ valid: true }, data));
+                    return [2 /*return*/];
+                }
+                _a.label = 2;
+            case 2:
+                res.send({ valid: false, username: username });
+                return [2 /*return*/];
+        }
+    });
+}); });
 router.post("/update", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var username, password, score, data;
     return __generator(this, function (_a) {
@@ -179,9 +230,36 @@ router.post("/update", function (req, res) { return __awaiter(void 0, void 0, vo
         }
     });
 }); });
-function update() {
-    // scores.sort((a, b) => a.score - b.score);
-}
+router.get("/update", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var username, password, score, data;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log(scores, "scores");
+                username = req.query.username;
+                password = req.query.password;
+                if (typeof req.query.score != typeof String()) {
+                    res.send({ valid: false, username: username });
+                    return [2 /*return*/];
+                }
+                score = parseInt(req.query.score);
+                if (!(typeof username == typeof String() &&
+                    typeof password == typeof String() &&
+                    typeof score == typeof Number())) return [3 /*break*/, 2];
+                return [4 /*yield*/, (0, db_1.updateUser)(username, password, score)];
+            case 1:
+                data = _a.sent();
+                if (data) {
+                    res.send(__assign({ valid: true }, data));
+                    return [2 /*return*/];
+                }
+                _a.label = 2;
+            case 2:
+                res.send({ valid: false, username: username });
+                return [2 /*return*/];
+        }
+    });
+}); });
 router.param("id", function (req, res, next, id) {
     // req.user = users[id];
     next();
@@ -201,6 +279,92 @@ router.get("/new", function (req, res) { return __awaiter(void 0, void 0, void 0
                     data = [];
                 }
                 res.render("users/display", { data: data });
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.post("/update-get", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var username, password, score, data, data_get;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log(req.body, "scores");
+                username = req.body.username;
+                password = req.body.password;
+                score = parseInt(req.body.score);
+                if (!(typeof username == typeof String() &&
+                    typeof password == typeof String() &&
+                    typeof score == typeof Number())) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, db_1.updateUser)(username, password, score)];
+            case 1:
+                data = _a.sent();
+                return [4 /*yield*/, (0, db_1.getUsers)()];
+            case 2:
+                data_get = _a.sent();
+                if (data && data_get) {
+                    res.send(__assign(__assign({ valid: true }, data), { scores: data_get }));
+                    return [2 /*return*/];
+                }
+                else if (data && !data_get) {
+                    res.send(__assign(__assign({ valid: true }, data), { scores: [] }));
+                    return [2 /*return*/];
+                }
+                else if (!data && data_get) {
+                    res.send({ valid: false, username: username, scores: data_get });
+                    return [2 /*return*/];
+                }
+                else {
+                    res.send({ valid: false, username: username, scores: [] });
+                    return [2 /*return*/];
+                }
+                _a.label = 3;
+            case 3:
+                res.send({ valid: false, username: username, scores: [] });
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.get("/update-get", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var username, password, score, data, data_get;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log(req.query, "scores");
+                username = req.query.username;
+                password = req.query.password;
+                if (typeof req.query.score != typeof String()) {
+                    res.send({ valid: false, username: username, scores: [] });
+                    return [2 /*return*/];
+                }
+                score = parseInt(req.query.score);
+                if (!(typeof username == typeof String() &&
+                    typeof password == typeof String() &&
+                    typeof score == typeof Number())) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, db_1.updateUser)(username, password, score)];
+            case 1:
+                data = _a.sent();
+                return [4 /*yield*/, (0, db_1.getUsers)()];
+            case 2:
+                data_get = _a.sent();
+                if (data && data_get) {
+                    res.send(__assign(__assign({ valid: true }, data), { scores: data_get }));
+                    return [2 /*return*/];
+                }
+                else if (data && !data_get) {
+                    res.send(__assign(__assign({ valid: true }, data), { scores: [] }));
+                    return [2 /*return*/];
+                }
+                else if (!data && data_get) {
+                    res.send({ valid: false, username: username, scores: data_get });
+                    return [2 /*return*/];
+                }
+                else {
+                    res.send({ valid: false, username: username, scores: [] });
+                    return [2 /*return*/];
+                }
+                _a.label = 3;
+            case 3:
+                res.send({ valid: false, username: username, scores: [] });
                 return [2 /*return*/];
         }
     });
