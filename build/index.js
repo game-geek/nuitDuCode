@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var db_1 = require("./routes/db");
 var users_1 = require("./routes/users");
+var stats_1 = require("./routes/stats");
 var path = require("path");
 var cors = require("cors");
 var corsOptions = {
@@ -21,4 +22,5 @@ app.use(cors(corsOptions)); // Use this after the variable declaration
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
 app.use("/users", users_1.default);
-app.listen(3000);
+app.use("/stats", stats_1.default);
+app.listen(3050);

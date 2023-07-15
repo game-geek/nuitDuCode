@@ -36,6 +36,12 @@ export async function addUser(
   const _username = String(username);
   const _password = String(password);
   const _score = Number(score);
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+  var time = String(today.getHours()) + ":" + String(today.getMinutes()) + ":" + String(today.getSeconds())
+  const _date = mm + '-' + dd + '-' + yyyy + " " + time
 
   try {
     const exists = await pool.query(
@@ -45,8 +51,8 @@ export async function addUser(
     if (exists?.rows.length == 0) {
       // can create the user!
       const query = await pool.query(
-        "INSERT INTO users (username, password, score, created_at) VALUES($1, $2, $3, '12-05-2023') RETURNING id",
-        [_username, _password, _score]
+        "INSERT INTO users (username, password, score, created_at) VALUES($1, $2, $3, $4) RETURNING id",
+        [_username, _password, _score, _date]
       );
       console.log(query.rows);
     } else {
@@ -120,6 +126,34 @@ export async function updateUser(
     }
   } catch (err) {
     console.log("error", err);
+    return false;
+  }
+}
+
+
+export async function updateFeedbackAiTankGame(email: string, username: string, liked: boolean, feedback: string) {
+  if (typeof username != typeof String("")) return false;
+  if (typeof email != typeof String("")) return false;
+  if (typeof liked != typeof Boolean(0)) return false;
+  if (typeof feedback != typeof String("")) return false;
+  const _username = String(username);
+  const _email = String(email);
+  const _liked = Boolean(liked);
+  const _feedback = String(feedback)
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+  var time = String(today.getHours()) + ":" + String(today.getMinutes()) + ":" + String(today.getSeconds())
+  const _date = mm + '-' + dd + '-' + yyyy + " " + time
+  try {
+
+    const query = await pool.query(
+      "INSERT INTO feedback_ai_tank_game (email, username, liked, created_at, feedback) VALUES($1, $2, $3, $4, $5)",
+      [ _email, _username, _liked, _date, _feedback]
+    );
+    return true
+  } catch (err) {
     return false;
   }
 }

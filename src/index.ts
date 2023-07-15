@@ -1,6 +1,7 @@
 import express = require("express");
 import { addUser } from "./routes/db";
 import userRouter from "./routes/users";
+import statsRouter from "./routes/stats";
 import path = require("path");
 const cors = require("cors");
 
@@ -24,5 +25,6 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
 
 app.use("/users", userRouter);
+app.use("/stats", statsRouter)
 
-app.listen(3000);
+app.listen(3050);

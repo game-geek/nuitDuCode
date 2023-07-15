@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.checkAccount = exports.getUsers = exports.addUser = void 0;
+exports.updateFeedbackAiTankGame = exports.updateUser = exports.checkAccount = exports.getUsers = exports.addUser = void 0;
 var pg_1 = require("pg");
 require("dotenv").config();
 var pool = undefined;
@@ -63,7 +63,7 @@ console.log("pool", pool);
 var usernameRegex = /^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$/;
 function addUser(username, password, score) {
     return __awaiter(this, void 0, void 0, function () {
-        var _username, _password, _score, exists, query, err_1;
+        var _username, _password, _score, today, dd, mm, yyyy, time, _date, exists, query, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -76,6 +76,12 @@ function addUser(username, password, score) {
                     _username = String(username);
                     _password = String(password);
                     _score = Number(score);
+                    today = new Date();
+                    dd = String(today.getDate()).padStart(2, '0');
+                    mm = String(today.getMonth() + 1).padStart(2, '0');
+                    yyyy = today.getFullYear();
+                    time = String(today.getHours()) + ":" + String(today.getMinutes()) + ":" + String(today.getSeconds());
+                    _date = mm + '-' + dd + '-' + yyyy + " " + time;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 6, , 7]);
@@ -83,7 +89,7 @@ function addUser(username, password, score) {
                 case 2:
                     exists = _a.sent();
                     if (!((exists === null || exists === void 0 ? void 0 : exists.rows.length) == 0)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, pool.query("INSERT INTO users (username, password, score, created_at) VALUES($1, $2, $3, '12-05-2023') RETURNING id", [_username, _password, _score])];
+                    return [4 /*yield*/, pool.query("INSERT INTO users (username, password, score, created_at) VALUES($1, $2, $3, $4) RETURNING id", [_username, _password, _score, _date])];
                 case 3:
                     query = _a.sent();
                     console.log(query.rows);
@@ -194,3 +200,43 @@ function updateUser(username, password, score) {
     });
 }
 exports.updateUser = updateUser;
+function updateFeedbackAiTankGame(email, username, liked, feedback) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _username, _email, _liked, _feedback, today, dd, mm, yyyy, time, _date, query, err_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (typeof username != typeof String(""))
+                        return [2 /*return*/, false];
+                    if (typeof email != typeof String(""))
+                        return [2 /*return*/, false];
+                    if (typeof liked != typeof Boolean(0))
+                        return [2 /*return*/, false];
+                    if (typeof feedback != typeof String(""))
+                        return [2 /*return*/, false];
+                    _username = String(username);
+                    _email = String(email);
+                    _liked = Boolean(liked);
+                    _feedback = String(feedback);
+                    today = new Date();
+                    dd = String(today.getDate()).padStart(2, '0');
+                    mm = String(today.getMonth() + 1).padStart(2, '0');
+                    yyyy = today.getFullYear();
+                    time = String(today.getHours()) + ":" + String(today.getMinutes()) + ":" + String(today.getSeconds());
+                    _date = mm + '-' + dd + '-' + yyyy + " " + time;
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, pool.query("INSERT INTO feedback_ai_tank_game (email, username, liked, created_at, feedback) VALUES($1, $2, $3, $4, $5)", [_email, _username, _liked, _date, _feedback])];
+                case 2:
+                    query = _a.sent();
+                    return [2 /*return*/, true];
+                case 3:
+                    err_5 = _a.sent();
+                    return [2 /*return*/, false];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.updateFeedbackAiTankGame = updateFeedbackAiTankGame;
